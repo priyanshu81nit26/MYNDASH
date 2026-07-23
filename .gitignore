@@ -1,0 +1,76 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+.tooling/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+android/build/
+
+# Crash / heap dumps — huge, never useful to keep, never small
+*.hprof
+
+# Build outputs — build these locally/CI/CD, never commit the binary
+*.apk
+*.aab
+*.ipa
+
+# Release signing — NEVER commit the keystore or its passwords.
+android/key.properties
+android/app/*.jks
+android/app/*.keystore
+
+# Firebase client config — not a traditional secret (Firebase's own guidance
+# says these can be public), but this repo is going public, so keep the
+# project ID out of it by default. The file stays on disk for local builds.
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
+
+# Cloud Functions
+functions/node_modules/
+functions/.env
+functions/.env.*
+
+# Environment files (never commit secrets)
+.env
+.env.*

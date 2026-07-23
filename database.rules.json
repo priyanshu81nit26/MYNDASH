@@ -1,0 +1,266 @@
+{
+  "rules": {
+    "rooms": {
+      "$code": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "matchmaking": {
+      ".read": "auth != null",
+      "$entry": {
+        ".write": "auth != null"
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "avatars": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid",
+        ".validate": "newData.isString() && newData.val().length <= 700000"
+      }
+    },
+    "choc": {
+      ".read": "auth != null",
+      "$day": {
+        "$user": {
+          ".write": "auth != null && root.child('usernames').child($user).val() === auth.uid"
+        }
+      }
+    },
+    "usernames": {
+      ".read": "auth != null",
+      "$name": {
+        ".write": "auth != null && (!data.exists() || data.val() === auth.uid) && (!newData.exists() || newData.val() === auth.uid)"
+      }
+    },
+    "profiles": {
+      ".read": "auth != null",
+      ".indexOn": ["contestRating", "xp"],
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid",
+        "contestRating": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5000" },
+        "elo": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5000" },
+        "xp": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000000" }
+      }
+    },
+    "social": {
+      ".read": "auth != null",
+      "$ownerUid": {
+        ".write": "auth != null && auth.uid === $ownerUid",
+        "requests": {
+          "$actorUser": {
+            ".write": "auth != null && root.child('usernames').child($actorUser).val() === auth.uid"
+          }
+        },
+        "followers": {
+          "$actorUser": {
+            ".write": "auth != null && root.child('usernames').child($actorUser).val() === auth.uid"
+          }
+        },
+        "following": {
+          "$actorUser": {
+            ".write": "auth != null && root.child('usernames').child($actorUser).val() === auth.uid"
+          }
+        }
+      }
+    },
+    "events": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null && (!data.exists() || data.child('hostUid').val() === auth.uid)",
+        "title": { ".validate": "newData.isString() && newData.val().length <= 120" },
+        "bg": { ".validate": "newData.isString() && newData.val().length <= 240000" },
+        "players": {
+          "$uid": {
+            ".write": false
+          }
+        },
+        "scores": {
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid && root.child('events').child($id).child('players').child($uid).exists()",
+            "score": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000000" }
+          }
+        }
+      }
+    },
+    "user_events": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "event_codes": {
+      ".read": "auth != null",
+      "$code": {
+        ".write": "auth != null"
+      }
+    },
+    "room_codes": {
+      ".read": "auth != null",
+      "$code": {
+        ".write": "auth != null"
+      }
+    },
+    "queue": {
+      ".read": "auth != null",
+      "$queueKey": {
+        ".write": "auth != null",
+        ".indexOn": ["at", "elo"]
+      }
+    },
+    "squads": {
+      ".read": "auth != null",
+      "$id": {
+        ".write": "auth != null"
+      }
+    },
+    "squad_codes": {
+      ".read": "auth != null",
+      "$code": {
+        ".write": "auth != null"
+      }
+    },
+    "squad_names": {
+      ".read": "auth != null",
+      "$nameKey": {
+        ".write": "auth != null"
+      }
+    },
+    "squad_mania": {
+      ".read": "auth != null",
+      "$month": {
+        "squads": {
+          "$sid": { ".write": "auth != null" }
+        },
+        "scores": {
+          "$round": {
+            "$sid": {
+              "$user": {
+                ".write": "auth != null && root.child('usernames').child($user).val() === auth.uid"
+              }
+            }
+          }
+        },
+        "claims": {
+          "$sid": {
+            "$user": {
+              ".write": "auth != null && root.child('usernames').child($user).val() === auth.uid"
+            }
+          }
+        }
+      }
+    },
+    "orgs": {
+      ".read": "auth != null",
+      "$type": {
+        "$key": {
+          ".write": "auth != null && !data.exists()",
+          "name": { ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 48" },
+          "members": {
+            "$user": {
+              ".write": "auth != null && root.child('usernames').child($user).val() === auth.uid"
+            }
+          }
+        }
+      }
+    },
+    "drops": {
+      ".read": "auth != null",
+      "$dropKey": {
+        "$user": {
+          ".write": "auth != null && root.child('usernames').child($user).val() === auth.uid"
+        }
+      }
+    },
+    "contest_scores": {
+      ".read": "auth != null",
+      "$day": {
+        "$format": {
+          "$user": {
+            ".write": "auth != null && root.child('usernames').child($user).val() === auth.uid"
+          }
+        }
+      }
+    },
+    "official_contests": {
+      ".read": "auth != null",
+      "$event": {
+        "registrations": {
+          "$uid": {
+            ".write": false
+          }
+        },
+        "results": {
+          "$uid": {
+            ".write": false
+          }
+        }
+      }
+    },
+    "contest_users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "official_arenas": {
+      ".read": "auth != null",
+      "$day": {
+        "$bracket": {
+          "reg": {
+            "$uid": {
+              ".write": false
+            }
+          },
+          "scores": {
+            "$uid": {
+              ".write": "auth != null && auth.uid === $uid && root.child('official_arenas').child($day).child($bracket).child('reg').child($uid).exists()"
+            }
+          }
+        }
+      }
+    },
+    "banks": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "corp_otps": {
+      ".read": false,
+      ".write": false
+    },
+    "otp_send_limits": {
+      ".read": false,
+      ".write": false
+    },
+    "corp_otp_limits": {
+      ".read": false,
+      ".write": false
+    },
+    "org_email_claims": {
+      ".read": false,
+      ".write": false
+    },
+    "host_limits": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "config": {
+      "limits": {
+        ".read": "auth != null",
+        ".write": false
+      }
+    },
+    "bots": {
+      ".read": "auth != null",
+      ".write": false
+    }
+  }
+}
